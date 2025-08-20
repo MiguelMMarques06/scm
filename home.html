@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MistinhosBet 🔥</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: radial-gradient(circle at top, #1a002a, #000);
+      color: #fff;
+      text-align: center;
+    }
+
+    header {
+      padding: 30px;
+      background: linear-gradient(to right, #ff00cc, #3333ff);
+      box-shadow: 0 0 25px #ff00cc;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin: 0;
+      animation: glow 2s infinite alternate;
+    }
+
+    p {
+      margin: 10px 0 0;
+      font-size: 1.2em;
+      color: #ddd;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #ff00cc; }
+      to { text-shadow: 0 0 25px #ff00cc, 0 0 35px #3333ff; }
+    }
+
+    nav {
+      margin-top: 20px;
+    }
+
+    nav button {
+      margin: 5px;
+      padding: 12px 24px;
+      background-color: #111;
+      border: 2px solid #ff00cc;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: 0.3s ease;
+    }
+
+    nav button:hover {
+      background-color: #ff00cc;
+      color: #000;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    section {
+      display: none;
+      padding-top: 20px;
+      border-top: 2px solid #ff00cc;
+    }
+
+    section.active {
+      display: block;
+    }
+
+    input, select {
+      padding: 10px;
+      margin: 10px;
+      font-size: 1em;
+      border: none;
+      border-radius: 6px;
+      width: 200px;
+      background: #222;
+      color: #fff;
+    }
+
+    .game-button {
+      background-color: #ff00cc;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 6px;
+      padding: 10px 20px;
+      margin: 10px;
+      transition: 0.3s ease;
+    }
+
+    .game-button:hover {
+      background-color: #ff3399;
+      transform: scale(1.05);
+    }
+
+    #dragon, #animal {
+      font-size: 5em;
+      margin-top: 20px;
+      animation: float 1s infinite alternate;
+    }
+
+    @keyframes float {
+      from { transform: translateY(0); }
+      to { transform: translateY(-15px); }
+    }
+
+    footer {
+      padding: 20px;
+      background-color: #111;
+      border-top: 2px solid #ff00cc;
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>MistinhosBet 🔥</h1>
+    <p>Onde a sorte é selvagem</p>
+    <nav>
+      <button onclick="showGame('crash')">Crash do Dragão</button>
+      <button onclick="showGame('corrida')">Corrida dos Bichos</button>
+      <button onclick="showGame('roleta')">Roleta do Caos</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Crash do Dragão -->
+    <section id="crash" class="active">
+      <h2>🐉 Crash do Dragão</h2>
+      <input type="number" id="betCrash" placeholder="Valor da aposta (R$)" />
+      <br />
+      <button class="game-button" onclick="startCrash()">Iniciar Voo</button>
+      <button class="game-button" onclick="stopCrash()">Parar Voo</button>
+      <div id="statusCrash">Status: Aguardando...</div>
+      <div id="multiplierCrash">Multiplicador: 1.00x</div>
+      <div id="dragon">🐉</div>
+    </section>
+
+    <!-- Corrida dos Bichos -->
+    <section id="corrida">
+      <h2>🐾 Corrida dos Bichos</h2>
+      <p>Aposte no vencedor: Capivara, Pombo ou Gato Ninja</p>
+      <select id="animalChoice">
+        <option value="capivara">Capivara</option>
+        <option value="pombo">Pombo</option>
+        <option value="gato">Gato Ninja</option>
+      </select>
+      <input type="number" id="betRace" placeholder="Valor da aposta (R$)" />
+      <br />
+      <button class="game-button" onclick="startRace()">Iniciar Corrida</button>
+      <div id="statusRace">Status: Aguardando...</div>
+      <div id="animal">🐾</div>
+    </section>
+
+    <!-- Roleta do Caos -->
+    <section id="roleta">
+      <h2>🎲 Roleta do Caos</h2>
+      <p>Escolha um número de 1 a 10</p>
+      <input type="number" id="roletaNum" min="1" max="10" placeholder="Seu número" />
+      <input type="number" id="betRoleta" placeholder="Valor da aposta (R$)" />
+      <br />
+      <button class="game-button" onclick="spinRoleta()">Girar Roleta</button>
+      <div id="statusRoleta">Status: Aguardando...</div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 MistinhosBet. Todos os direitos reservados.</p>
+  </footer>
+
+  <script>
+    function showGame(id) {
+      document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+    }
+
+    // Crash do Dragão
+    let crashMultiplier = 1.0;
+    let crashInterval;
+    let crashFlying = false;
+
+    function startCrash() {
+      if (crashFlying) return;
+      const bet = parseFloat(document.getElementById("betCrash").value);
+      if (isNaN(bet) || bet <= 0) return alert("Aposta inválida.");
+
+      crashFlying = true;
+      crashMultiplier = 1.0;
+      document.getElementById("statusCrash").textContent = "Dragão voando...";
+      crashInterval = setInterval(() => {
+        crashMultiplier += Math.random() * 0.1;
+        document.getElementById("multiplierCrash").textContent = `Multiplicador: ${crashMultiplier.toFixed(2)}x`;
+        if (Math.random() < 0.01) crashExplode();
+      }, 100);
+    }
+
+    function stopCrash() {
+      if (!crashFlying) return;
+      clearInterval(crashInterval);
+      crashFlying = false;
+      const bet = parseFloat(document.getElementById("betCrash").value);
+      const win = (bet * crashMultiplier).toFixed(2);
+      document.getElementById("statusCrash").textContent = `✅ Você ganhou R$${win}`;
+    }
+
+    function crashExplode() {
+      clearInterval(crashInterval);
+      crashFlying = false;
+      document.getElementById("statusCrash").textContent = "💥 Dragão colidiu! Você perdeu.";
+    }
+
+    // Corrida dos Bichos
+    function startRace() {
+      const bet = parseFloat(document.getElementById("betRace").value);
+      const choice = document.getElementById("animalChoice").value;
+      if (isNaN(bet) || bet <= 0) return alert("Aposta inválida.");
+
+      const animais = ["capivara", "pombo", "gato"];
+      const vencedor = animais[Math.floor(Math.random() * animais.length)];
+
+      if (choice === vencedor) {
+        const win = (bet * 2).toFixed(2);
+        document.getElementById("statusRace").textContent = `🏁 ${vencedor.toUpperCase()} venceu! Você ganhou R$${win}`;
+      } else {
+        document.getElementById("statusRace").textContent = `💨 ${vencedor.toUpperCase()} venceu! Você perdeu.`;
+      }
+    }
+
+    // Roleta do Caos
+    function spinRoleta() {
+      const bet = parseFloat(document.getElementById("betRoleta").value);
+      const num = parseInt(document.getElementById("roletaNum").value);
+      if (isNaN(bet) || bet <= 0 || isNaN(num) || num < 1 || num > 10)
+        return alert("Dados inválidos.");
+
+      const result = Math.floor(Math.random() * 10) + 1;
+      if (num === result) {
+        const win = (bet * 5).toFixed(2);
+        document.getElementById("statusRoleta").textContent = `🎉 Número sorteado: ${result}. Você ganhou R$${win}`;
+      } else {
+        document.getElementById("statusRoleta").textContent = `❌ Número sorteado: ${result}. Você perdeu.`;
+      }
+    }
+  </script>
+</body>
+</html>
